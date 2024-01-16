@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload</title>
+</head>
+<body>
+
+  <h1>Create Event</h1>
+
+  <form id="eventForm" method="post" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required>
+
+    <label for="file">File:</label>
+    <input type="file" id="file" name="file" required>
+
+    <!-- Use a different name for the custom function -->
+    <button type="button" onclick="submitEvent()">Create Event</button>
+  </form>
+
+  <script>
+    async function submitEvent() {
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const fileInput = document.getElementById('file');
+
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const response = await fetch('http://localhost:3000/events/create', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Event created:', result);
+        } else {
+          const errorText = await response.text();
+          console.error('Error creating event:', errorText);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  </script>
+
+</body>
+</html>
