@@ -44,7 +44,7 @@ app.get("/", (req, res) => {
 cron.schedule("*/5 * * * *", async () => {
   try {
     // Make a GET request to your own server
-    const response = await axios.get("http://localhost:3000");
+    const response = await axios.get("https://bindhyehworiserver.onrender.com/");
     console.log("Ping server to prevent sleeping", response.data);
   } catch (error) {
     console.error("Error pinging server:", error.message);
