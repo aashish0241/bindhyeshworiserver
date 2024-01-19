@@ -7,8 +7,11 @@ const teacherRoute = require("./route/teacherRoute");
 const studyRoute = require("./route/studyRoute");
 const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
-const cors = require("cors"); 
+const cors = require("cors");
 const errorHandler = require("./middleware/middleware");
+const cron = require("node-cron");
+const axios = require("axios"); // Import Axios
+
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
@@ -35,6 +38,17 @@ app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("Get user successfully");
+});
+
+// Schedule a job to make a request to the server every 5 minutes
+cron.schedule("*/5 * * * *", async () => {
+  try {
+    // Make a GET request to your own server
+    const response = await axios.get("http://localhost:3000");
+    console.log("Ping server to prevent sleeping", response.data);
+  } catch (error) {
+    console.error("Error pinging server:", error.message);
+  }
 });
 
 const PORT = process.env.PORT || 3000;
